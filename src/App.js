@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
+import OptimizeTest from "./OptimizeTest";
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -46,7 +47,6 @@ const App = () => {
   };
 
   const onRemove = (targetId) => {
-    console.log(`${targetId} is deleted.`);
     // 선택한 데이터가 삭제된 게시글 리스트 정의
     const newDiaryList = data.filter((it) => it.id !== targetId);
     // 갱신된 리스트로 상태 변경
@@ -70,7 +70,6 @@ const App = () => {
     if (data.length === 0) {
       return { goodcount: 0, badCount: 0, goodRatio: 0 };
     }
-    console.log("Diary Analysis Start!");
 
     const goodCount = data.filter((it) => it.emotion >= 3).length;
     const badCount = data.length - goodCount;
@@ -82,6 +81,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <OptimizeTest />
       <DiaryEditor onCreate={onCreate} />
       <div>Total Diary : {data.length}</div>
       <div>Good emotion count : {goodCount}</div>
