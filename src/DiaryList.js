@@ -1,7 +1,6 @@
 import DiaryItem from "./DiaryItem";
 
 const DiaryList = ({ diaryList }) => {
-  console.log(diaryList);
   return (
     <div className="DiaryList">
       <h2>Diary List</h2>
