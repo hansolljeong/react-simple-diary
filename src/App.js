@@ -3,30 +3,6 @@ import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
 
-// const dummyList = [
-//   {
-//     id: 1,
-//     author: "luka",
-//     content: "dallas mavericks",
-//     emotion: 3,
-//     created_date: new Date().getTime(),
-//   },
-//   {
-//     id: 2,
-//     author: "lebron",
-//     content: "los angeles lakers",
-//     emotion: 4,
-//     created_date: new Date().getTime(),
-//   },
-//   {
-//     id: 3,
-//     author: "ja",
-//     content: "memphis grizzlies",
-//     emotion: 2,
-//     created_date: new Date().getTime(),
-//   },
-// ];
-
 const App = () => {
   const [data, setData] = useState([]);
 
@@ -47,10 +23,31 @@ const App = () => {
     setData([newItem, ...data]);
   };
 
+  const onRemove = (targetId) => {
+    console.log(`${targetId} is deleted.`);
+    // 선택한 데이터가 삭제된 게시글 리스트 정의
+    const newDiaryList = data.filter((it) => it.id !== targetId);
+    // 갱신된 리스트로 상태 변경
+    setData(newDiaryList);
+  };
+
+  const onEdit = (targetId, newContent) => {
+    setData(
+      data.map((it) =>
+        it.id === targetId
+          ? {
+              ...it,
+              content: newContent,
+            }
+          : it
+      )
+    );
+  };
+
   return (
     <div className="App">
       <DiaryEditor onCreate={onCreate} />
-      <DiaryList diaryList={data} />
+      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
     </div>
   );
 };

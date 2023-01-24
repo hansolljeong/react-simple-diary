@@ -30,7 +30,7 @@ const DiaryEditor = ({ onCreate }) => {
 
     onCreate(state.author, state.content, state.emotion);
     // 작성 완료 알림 팝업
-    alert("Save Complete");
+    alert("Completely Saved");
     // 작성 완료 시 기존 작성 내용 초기화
     setState({
       author: "",
