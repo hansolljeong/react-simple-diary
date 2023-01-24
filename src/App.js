@@ -1,7 +1,17 @@
-import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+} from "react";
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
+
+export const DiaryStateContext = createContext();
+export const DiaryDispatchContext = createContext();
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -92,15 +102,23 @@ const App = () => {
 
   const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
 
+  const memoizedDispatches = useMemo(() => {
+    return { onCreate, onRemove, onEdit };
+  }, []);
+
   return (
-    <div className="App">
-      <DiaryEditor onCreate={onCreate} />
-      <div>Total Diary : {data.length}</div>
-      <div>Good emotion count : {goodCount}</div>
-      <div>Bad emotion count : {badCount}</div>
-      <div>Good emotion ratio : {goodRatio}</div>
-      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
-    </div>
+    <DiaryStateContext.Provider value={data}>
+      <DiaryDispatchContext.Provider value={memoizedDispatches}>
+        <div className="App">
+          <DiaryEditor />
+          <div>Total Diary : {data.length}</div>
+          <div>Good emotion count : {goodCount}</div>
+          <div>Bad emotion count : {badCount}</div>
+          <div>Good emotion ratio : {goodRatio}</div>
+          <DiaryList />
+        </div>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 };
 
