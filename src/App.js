@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
-import OptimizeTest from "./OptimizeTest";
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -32,7 +31,7 @@ const App = () => {
   }, []);
 
   // 게시물 생성 함수
-  const onCreate = (author, content, emotion) => {
+  const onCreate = useCallback((author, content, emotion) => {
     const created_date = new Date().getTime();
     const newItem = {
       author,
@@ -41,30 +40,25 @@ const App = () => {
       created_date,
       id: dataId.current,
     };
+
     dataId.current += 1;
     // 최신 게시물이 가장 위로 오도록 state 변경
-    setData([newItem, ...data]);
-  };
+    // 함수형 Update 기법 : dependency array를 빈 배열로 유지하면서 prop을 받아올 수 있도록 해줌
+    setData((data) => [newItem, ...data]);
+  }, []);
 
-  const onRemove = (targetId) => {
-    // 선택한 데이터가 삭제된 게시글 리스트 정의
-    const newDiaryList = data.filter((it) => it.id !== targetId);
-    // 갱신된 리스트로 상태 변경
-    setData(newDiaryList);
-  };
+  const onRemove = useCallback((targetId) => {
+    // 선택한 데이터가 삭제된 게시글 리스트 정의하여 갱신된 리스트로 상태 변경
+    setData((data) => data.filter((it) => it.id !== targetId));
+  }, []);
 
-  const onEdit = (targetId, newContent) => {
-    setData(
+  const onEdit = useCallback((targetId, newContent) => {
+    setData((data) =>
       data.map((it) =>
-        it.id === targetId
-          ? {
-              ...it,
-              content: newContent,
-            }
-          : it
+        it.id === targetId ? { ...it, content: newContent } : it
       )
     );
-  };
+  }, []);
 
   const getDiaryAnalysis = useMemo(() => {
     if (data.length === 0) {
@@ -81,7 +75,6 @@ const App = () => {
 
   return (
     <div className="App">
-      <OptimizeTest />
       <DiaryEditor onCreate={onCreate} />
       <div>Total Diary : {data.length}</div>
       <div>Good emotion count : {goodCount}</div>
