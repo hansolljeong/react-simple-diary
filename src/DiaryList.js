@@ -18,8 +18,4 @@ const DiaryList = () => {
   );
 };
 
-DiaryList.defaultProps = {
-  diaryList: [],
-};
-
 export default DiaryList;
